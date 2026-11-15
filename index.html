@@ -112,6 +112,170 @@ a{overflow-wrap:anywhere}
 <p>Home of Elohim, Our King.</p>
 <p>© 2026 Radical Nations Complex. All rights reserved.</p>
 </footer>
+
+<style>
+.rn-store {
+  background: #160d2c;
+  color: #fff;
+  padding: 28px 14px;
+  font-family: Arial, sans-serif;
+  border-radius: 14px;
+  margin: 25px 0;
+}
+.rn-store h2, .rn-store h3 { color: #e9bd61; }
+.rn-store-intro { color: #ddd; }
+.rn-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(145px,1fr));
+  gap: 14px;
+}
+.rn-product {
+  background: #281844;
+  border: 1px solid #b58b43;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+.rn-product img {
+  width: 100%;
+  height: 125px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eee;
+}
+.rn-product h3 { font-size: 15px; }
+.rn-product p { font-size: 13px; color: #eee; }
+.rn-store button {
+  background: #d6aa50;
+  color: #180d2c;
+  border: 0;
+  padding: 10px 13px;
+  border-radius: 7px;
+  font-weight: bold;
+  margin: 4px;
+  cursor: pointer;
+}
+.rn-cart {
+  background: #281844;
+  border: 1px solid #d6aa50;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 24px;
+}
+.rn-cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #66517e;
+  padding: 9px 0;
+  font-size: 13px;
+}
+.rn-cart-item button { padding: 6px 9px; }
+.rn-empty { color: #ddd; }
+.rn-whatsapp { width: 100%; margin-top: 12px !important; }
+</style>
+
+<section class="rn-store" id="rn-shop">
+  <h2>RADICAL NATIONS STORES</h2>
+  <p class="rn-store-intro">Smartphones, intelligent gadgets and creative resin products. Quality choices, direct enquiries.</p>
+
+  <div class="rn-products">
+    <article class="rn-product">
+      <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500" alt="Smartphone">
+      <h3>iPhone Collection</h3>
+      <p>Explore available Apple smartphones.</p>
+      <p><strong>Request Price</strong></p>
+      <button onclick="rnAdd('iPhone Collection')">Add to Enquiry</button>
+    </article>
+
+    <article class="rn-product">
+      <img src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500" alt="Samsung smartphone">
+      <h3>Samsung Collection</h3>
+      <p>Explore Samsung smartphones.</p>
+      <p><strong>Request Price</strong></p>
+      <button onclick="rnAdd('Samsung Collection')">Add to Enquiry</button>
+    </article>
+
+    <article class="rn-product">
+      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" alt="Smart watch">
+      <h3>Smart Gadgets</h3>
+      <p>Smart watches and intelligent accessories.</p>
+      <p><strong>Request Price</strong></p>
+      <button onclick="rnAdd('Smart Gadgets')">Add to Enquiry</button>
+    </article>
+
+    <article class="rn-product">
+      <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=500" alt="Decorative handmade products">
+      <h3>Resin Products</h3>
+      <p>Creative resin art and decorative pieces.</p>
+      <p><strong>Request Price</strong></p>
+      <button onclick="rnAdd('Resin Products')">Add to Enquiry</button>
+    </article>
+  </div>
+
+  <div class="rn-cart">
+    <h3>Your Enquiry Basket</h3>
+    <div id="rn-cart-items">
+      <p class="rn-empty">Your basket is currently empty.</p>
+    </div>
+    <button class="rn-whatsapp" onclick="rnCheckout()">Request Prices on WhatsApp</button>
+  </div>
+  <p style="font-size:12px;color:#ddd;margin-top:16px;">
+    Product images are illustrative. Availability and prices are confirmed directly with our team.
+  </p>
+</section>
+
+<script>
+const rnBasket = {};
+
+function rnAdd(name) {
+  rnBasket[name] = (rnBasket[name] || 0) + 1;
+  rnRender();
+}
+
+function rnChange(name, amount) {
+  rnBasket[name] = (rnBasket[name] || 0) + amount;
+  if (rnBasket[name] <= 0) delete rnBasket[name];
+  rnRender();
+}
+
+function rnRender() {
+  const area = document.getElementById('rn-cart-items');
+  const names = Object.keys(rnBasket);
+
+  if (!names.length) {
+    area.innerHTML = '<p class="rn-empty">Your basket is currently empty.</p>';
+    return;
+  }
+
+  area.innerHTML = names.map(name => `
+    <div class="rn-cart-item">
+      <span>${name} × ${rnBasket[name]}</span>
+      <span>
+        <button onclick="rnChange('${name}',-1)">−</button>
+        <button onclick="rnChange('${name}',1)">+</button>
+        <button onclick="delete rnBasket['${name}'];rnRender()">Remove</button>
+      </span>
+    </div>
+  `).join('');
+}
+
+function rnCheckout() {
+  const names = Object.keys(rnBasket);
+  if (!names.length) {
+    alert('Please add a product to your enquiry basket first.');
+    return;
+  }
+
+  const message = 'Hello Radical Nations Stores! I would like to enquire about these products:\n\n' +
+    names.map(name => name + ' x ' + rnBasket[name]).join('\n') +
+    '\n\nPlease confirm availability and prices. Thank you.';
+
+  window.open('https://wa.me/2347061411564?text=' + encodeURIComponent(message), '_blank');
+}
+</script>
+
 </body>
 </html>
 Enter/
