@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://radical-nations-complex.pages.dev/sitemap.xml
